@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muhtasim Ahmed — Design System</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/outfit@5/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/outfit@5/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/outfit@5/800.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/space-mono@5/400.css">
+<style>
+/* ─── TOKENS ───────────────────────────────────────────────── */
+:root {
+  --bg:     #030018;
+  --bg2:    #07002e;
+  --bg3:    #0b0040;
+  --ind:    #6366f1;
+  --cyan:   #06b6d4;
+  --pink:   #ec4899;
+  --green:  #4ade80;
+  --il:     #a5b4fc;
+  --cl:     #67e8f9;
+  --pl:     #f0abfc;
+  --gl:     #86efac;
+  --text:   #e0e7ff;
+  --dim:    rgba(224,231,255,.38);
+  --muted:  rgba(224,231,255,.18);
+  --border: rgba(255,255,255,.09);
+  --glass:  rgba(255,255,255,.04);
+  --glass2: rgba(255,255,255,.07);
+  --fd: 'Outfit', 'Helvetica Neue', sans-serif;
+  --fm: 'Space Mono', 'Courier New', monospace;
+}
+
+/* ─── RESET ─────────────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--fd);
+  font-size: 16px;
+  overflow-x: hidden;
+  cursor: none;
+  line-height: 1.5;
+}
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--ind), var(--cyan)); }
+
+/* ─── CURSOR ─────────────────────────────────────────────────── */
+#cur  { position:fixed; width:10px; height:10px; background:linear-gradient(135deg,var(--ind),var(--cyan)); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width .2s,height .2s; }
+#cur2 { position:fixed; width:30px; height:30px; border:1px solid rgba(99,102,241,.5); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:all .12s; }
+
+/* ─── AURORA ORBS ─────────────────────────────────────────────── */
+.orb { position:fixed; border-radius:50%; pointer-events:none; z-index:0; }
+.orb1 { width:600px; height:600px; background:radial-gradient(ellipse,rgba(99,102,241,.12) 0%,transparent 60%); top:-200px; left:-150px; animation:drift1 20s ease-in-out infinite; }
+.orb2 { width:500px; height:500px; background:radial-gradient(ellipse,rgba(6,182,212,.09) 0%,transparent 60%); top:-100px; right:-100px; animation:drift2 25s ease-in-out infinite; }
+.orb3 { width:400px; height:400px; background:radial-gradient(ellipse,rgba(236,72,153,.07) 0%,transparent 60%); bottom:20%; left:30%; animation:drift3 30s ease-in-out infinite; }
+@keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(60px,40px)} }
+@keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-50px,60px)} }
+@keyframes drift3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-50px)} }
+
+/* ─── LAYOUT ─────────────────────────────────────────────────── */
+.page { display: block; min-height: 100vh; position: relative; z-index: 1; }
+
+/* ─── SIDEBAR ────────────────────────────────────────────────── */
+aside {
+  position: fixed;
+  top: 0; left: 0;
+  width: 220px;
+  height: 100vh;
+  border-right: 1px solid var(--border);
+  background: rgba(3,0,24,.92);
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  padding: 32px 20px;
+  z-index: 50;
+  overflow-y: auto;
+}
+.aside-logo {
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.aside-sub {
+  font-family: var(--fm);
+  font-size: 8px;
+  color: var(--dim);
+  letter-spacing: 2px;
+  margin-bottom: 32px;
+}
+.aside-divider { height: 1px; background: var(--border); margin: 16px 0; }
+.aside-section-label {
+  font-family: var(--fm);
+  font-size: 7px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  margin-top: 6px;
+}
+.aside-link {
+  display: block;
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--dim);
+  text-decoration: none;
+  padding: 7px 10px;
+  border-radius: 8px;
+  margin-bottom: 2px;
+  transition: all .2s;
+}
+.aside-link:hover, .aside-link.active { color: var(--il); background: rgba(99,102,241,.12); }
+.aside-link.active { border-left: 2px solid var(--ind); }
+
+/* ─── MAIN CONTENT ───────────────────────────────────────────── */
+main { margin-left: 220px; }
+
+/* ─── SECTION SHELL ──────────────────────────────────────────── */
+.ds-section {
+  padding: 80px 60px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.ds-section:first-child { padding-top: 100px; }
+
+.section-tag {
+  font-family: var(--fm);
+  font-size: 8px;
+  letter-spacing: 4px;
+  color: rgba(165,180,252,.5);
+  margin-bottom: 6px;
+}
+.section-title {
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 8px;
+}
+.section-desc {
+  font-size: 13px;
+  color: var(--dim);
+  line-height: 1.8;
+  max-width: 600px;
+  margin-bottom: 48px;
+}
+.grad { background: linear-gradient(90deg,var(--il),var(--cl)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+/* ─── SPEC LABEL ─────────────────────────────────────────────── */
+.spec {
+  font-family: var(--fm);
+  font-size: 8px;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  margin-top: 8px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   1. COLORS
+══════════════════════════════════════════════════════════════ */
+.color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-bottom: 40px; }
+.color-swatch {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.swatch-block { height: 72px; }
+.swatch-info { padding: 10px 12px; background: rgba(255,255,255,.04); }
+.swatch-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+.swatch-val { font-family: var(--fm); font-size: 8px; color: var(--dim); letter-spacing: 1px; }
+
+.gradient-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
+.grad-swatch {
+  flex: 1; min-width: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.grad-block { height: 56px; }
+.grad-info { padding: 10px 14px; background: rgba(255,255,255,.04); }
+.grad-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+.grad-val { font-family: var(--fm); font-size: 8px; color: var(--dim); letter-spacing: .5px; }
+
+.surface-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.surface-swatch {
+  flex: 1; min-width: 140px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.surface-name { font-size: 11px; font-weight: 700; }
+.surface-val { font-family: var(--fm); font-size: 8px; color: var(--dim); letter-spacing: .5px; }
+
+/* ══════════════════════════════════════════════════════════════
+   2. TYPOGRAPHY
+══════════════════════════════════════════════════════════════ */
+.type-stack { display: flex; flex-direction: column; gap: 32px; }
+.type-row { display: grid; grid-template-columns: 160px 1fr; gap: 40px; align-items: baseline; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+.type-row:last-child { border-bottom: none; }
+.type-meta { }
+.type-role { font-family: var(--fm); font-size: 8px; letter-spacing: 3px; color: rgba(165,180,252,.5); margin-bottom: 4px; }
+.type-spec { font-family: var(--fm); font-size: 8px; color: var(--dim); line-height: 1.8; }
+
+.t-hero-name { font-size: clamp(52px, 7vw, 80px); font-weight: 800; line-height: 1; letter-spacing: -1.5px; background: linear-gradient(135deg,#e0e7ff,var(--il),var(--cl)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.t-section-title { font-size: clamp(30px, 4vw, 48px); font-weight: 800; line-height: 1.05; }
+.t-card-title { font-size: 18px; font-weight: 700; line-height: 1.2; }
+.t-body { font-size: 14px; color: var(--dim); line-height: 1.85; }
+.t-small { font-size: 12px; color: var(--dim); line-height: 1.75; }
+.t-label { font-family: var(--fm); font-size: 9px; letter-spacing: 4px; color: rgba(165,180,252,.6); }
+.t-mono-sm { font-family: var(--fm); font-size: 8px; letter-spacing: 2px; color: var(--dim); }
+
+/* ══════════════════════════════════════════════════════════════
+   3. BUTTONS
+══════════════════════════════════════════════════════════════ */
+.btn-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 20px; }
+.btn-grad {
+  background: linear-gradient(135deg,var(--ind),var(--cyan));
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: opacity .2s;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-grad:hover { opacity: .82; }
+.btn-glass {
+  background: rgba(99,102,241,.12);
+  border: 1px solid rgba(99,102,241,.35);
+  color: var(--il);
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all .2s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-glass:hover { background: rgba(99,102,241,.22); }
+.btn-ghost {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.12);
+  color: var(--dim);
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all .2s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-ghost:hover { border-color: rgba(99,102,241,.4); color: var(--il); }
+.btn-sm { padding: 7px 18px !important; font-size: 8px !important; }
+.btn-icon { width: 38px; height: 38px; padding: 0 !important; justify-content: center; }
+
+/* ══════════════════════════════════════════════════════════════
+   4. CHIPS & BADGES
+══════════════════════════════════════════════════════════════ */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chip {
+  border-radius: 30px;
+  padding: 6px 14px;
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.chip-ind { background: rgba(99,102,241,.12); border: 1px solid rgba(99,102,241,.3); color: var(--il); }
+.chip-cya { background: rgba(6,182,212,.12); border: 1px solid rgba(6,182,212,.3); color: var(--cl); }
+.chip-pnk { background: rgba(236,72,153,.12); border: 1px solid rgba(236,72,153,.3); color: var(--pl); }
+.chip-glass { background: var(--glass); border: 1px solid var(--border); color: var(--dim); }
+.chip-green { background: rgba(74,222,128,.1); border: 1px solid rgba(74,222,128,.25); color: var(--gl); }
+.avail-dot { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; animation: pulse2 2s infinite; flex-shrink: 0; }
+@keyframes pulse2 { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,.5)} 70%{opacity:.8;box-shadow:0 0 0 5px transparent} }
+
+/* ══════════════════════════════════════════════════════════════
+   5. CARDS
+══════════════════════════════════════════════════════════════ */
+.cards-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 40px; }
+
+/* Glass card */
+.card-glass {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  backdrop-filter: blur(8px);
+  transition: transform .2s, border-color .2s;
+}
+.card-glass:hover { transform: translateY(-4px); border-color: rgba(99,102,241,.3); }
+
+/* Accent cards */
+.card-ind { background: rgba(99,102,241,.07); border: 1px solid rgba(99,102,241,.22); border-radius: 16px; padding: 22px; transition: transform .2s; }
+.card-cya { background: rgba(6,182,212,.07); border: 1px solid rgba(6,182,212,.22); border-radius: 16px; padding: 22px; transition: transform .2s; }
+.card-pnk { background: rgba(236,72,153,.07); border: 1px solid rgba(236,72,153,.22); border-radius: 16px; padding: 22px; transition: transform .2s; }
+.card-ind:hover, .card-cya:hover, .card-pnk:hover { transform: translateY(-4px); }
+
+.card-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; font-size: 18px; }
+.ci-ind { background: rgba(99,102,241,.2); }
+.ci-cya { background: rgba(6,182,212,.2); }
+.ci-pnk { background: rgba(236,72,153,.2); }
+.card-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.card-body { font-size: 11px; color: var(--dim); line-height: 1.75; }
+.card-num { font-family: var(--fm); font-size: 9px; letter-spacing: 2px; margin-bottom: 8px; color: rgba(165,180,252,.4); }
+
+/* Stat pill */
+.stat-pill { background: var(--glass); border: 1px solid var(--border); border-radius: 14px; padding: 14px 20px; text-align: center; backdrop-filter: blur(8px); }
+.stat-num { font-size: 26px; font-weight: 800; background: linear-gradient(135deg,var(--il),var(--cl)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.stat-label { font-family: var(--fm); font-size: 7px; color: rgba(255,255,255,.2); letter-spacing: 2px; margin-top: 3px; }
+
+/* Featured card */
+.featured-card {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  background: rgba(99,102,241,.06);
+  border: 1px solid rgba(99,102,241,.2);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform .3s;
+  margin-bottom: 14px;
+}
+.featured-card:hover { transform: translateY(-4px); }
+.feat-img-wrap { position: relative; overflow: hidden; min-height: 240px; }
+.feat-img-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg,rgba(99,102,241,.2),rgba(6,182,212,.1)); display: flex; align-items: center; justify-content: center; }
+.feat-img-placeholder svg { opacity: .2; }
+.feat-tint { position: absolute; inset:0; background: linear-gradient(135deg,rgba(99,102,241,.3),rgba(6,182,212,.15)); pointer-events:none; }
+.feat-badge { position:absolute; top:14px; left:14px; background:rgba(99,102,241,.35); border:1px solid rgba(165,180,252,.35); padding:5px 12px; border-radius:20px; font-family:var(--fm); font-size:8px; color:var(--il); letter-spacing:2px; }
+.feat-body { padding: 32px; display: flex; flex-direction: column; justify-content: center; }
+.feat-type { font-family:var(--fm); font-size:9px; color:rgba(165,180,252,.5); letter-spacing:3px; margin-bottom:8px; }
+.feat-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; line-height: 1.15; }
+.feat-desc { font-size: 12px; color: var(--dim); line-height: 1.8; margin-bottom: 16px; }
+.feat-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom: 18px; }
+.feat-tag { border-radius: 20px; padding: 3px 10px; font-family: var(--fm); font-size: 8px; letter-spacing: 1px; }
+.ft-ind { background:rgba(99,102,241,.15); border:1px solid rgba(99,102,241,.25); color:var(--il); }
+.ft-cya { background:rgba(6,182,212,.15); border:1px solid rgba(6,182,212,.25); color:var(--cl); }
+.ft-pnk { background:rgba(236,72,153,.15); border:1px solid rgba(236,72,153,.25); color:var(--pl); }
+.feat-link { font-family:var(--fm); font-size:9px; color:var(--il); letter-spacing:2px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; }
+
+/* ══════════════════════════════════════════════════════════════
+   6. NAV
+══════════════════════════════════════════════════════════════ */
+.nav-demo-wrap { display: flex; flex-direction: column; gap: 20px; }
+.nav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 60px;
+  padding: 10px 22px;
+  backdrop-filter: blur(16px);
+  width: fit-content;
+}
+.nav-logo-d { font-weight: 800; font-size: 13px; letter-spacing: 2px; }
+.nav-div-d { width: 1px; height: 16px; background: rgba(255,255,255,.12); }
+.nav-links-d { display: flex; gap: 16px; }
+.nav-links-d a { font-family: var(--fm); font-size: 9px; letter-spacing: 1.5px; color: var(--dim); text-decoration: none; transition: color .2s; }
+.nav-links-d a:hover, .nav-links-d a.active { color: var(--il); }
+
+/* Scrolled state */
+.nav-pill.scrolled { background: rgba(3,0,24,.88); border-color: rgba(255,255,255,.07); }
+
+/* ══════════════════════════════════════════════════════════════
+   7. FORMS
+══════════════════════════════════════════════════════════════ */
+.form-demo { max-width: 560px; }
+.form-group { margin-bottom: 16px; }
+.form-label { font-family: var(--fm); font-size: 8px; letter-spacing: 2px; color: var(--dim); margin-bottom: 8px; display: block; }
+.form-input {
+  width: 100%;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 13px 16px;
+  font-family: var(--fd);
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  transition: border-color .2s;
+}
+.form-input:focus { border-color: rgba(99,102,241,.5); }
+.form-input::placeholder { color: var(--muted); }
+.form-textarea { height: 100px; resize: none; }
+.form-card { background: rgba(99,102,241,.06); border: 1px solid rgba(99,102,241,.18); border-radius: 20px; padding: 32px; }
+.search-input {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); border-radius: 40px;
+  padding: 10px 20px; backdrop-filter: blur(8px);
+}
+.search-input input { flex:1; background:transparent; border:none; outline:none; font-family:var(--fd); font-size:13px; color:var(--text); }
+.search-input input::placeholder { color: var(--dim); }
+
+/* ══════════════════════════════════════════════════════════════
+   8. TIMELINE
+══════════════════════════════════════════════════════════════ */
+.timeline { position: relative; padding-left: 32px; max-width: 560px; }
+.timeline::before { content:''; position:absolute; left:0; top:6px; bottom:6px; width:1.5px; background:linear-gradient(180deg,var(--ind),var(--cyan),var(--pink),transparent); }
+.tl-item { position: relative; margin-bottom: 36px; }
+.tl-dot { position:absolute; left:-38px; top:6px; width:12px; height:12px; border-radius:50%; box-shadow:0 0 10px rgba(99,102,241,.5); }
+.tl-ind { background: linear-gradient(135deg,var(--ind),var(--cyan)); }
+.tl-cya { background: linear-gradient(135deg,var(--cyan),var(--ind)); }
+.tl-pnk { background: linear-gradient(135deg,var(--pink),var(--ind)); }
+.tl-date { font-family:var(--fm); font-size:9px; color:var(--il); letter-spacing:2px; margin-bottom:4px; }
+.tl-role { font-size:16px; font-weight:700; margin-bottom:2px; }
+.tl-company { font-family:var(--fm); font-size:9px; color:var(--cl); letter-spacing:1px; margin-bottom:8px; }
+.tl-desc { font-size:12px; color:var(--dim); line-height:1.75; margin-bottom:8px; }
+.tl-tags { display:flex; flex-wrap:wrap; gap:4px; }
+.tl-tag { background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.2); border-radius:20px; padding:2px 8px; font-family:var(--fm); font-size:8px; color:var(--il); }
+
+/* ══════════════════════════════════════════════════════════════
+   9. SKILL BARS
+══════════════════════════════════════════════════════════════ */
+.skill-section { max-width: 480px; }
+.skill-cat-label { font-family: var(--fm); font-size: 9px; color: rgba(165,180,252,.5); letter-spacing: 3px; margin-bottom: 12px; }
+.skill-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.skill-name { font-size: 12px; font-weight: 700; min-width: 100px; }
+.skill-track { flex: 1; height: 3px; background: rgba(255,255,255,.07); border-radius: 3px; overflow: hidden; }
+.skill-fill { height: 100%; border-radius: 3px; }
+.sf-ind { background: linear-gradient(90deg,var(--ind),var(--il)); }
+.sf-cya { background: linear-gradient(90deg,var(--cyan),var(--cl)); }
+.sf-pnk { background: linear-gradient(90deg,var(--pink),var(--pl)); }
+.skill-pct { font-family: var(--fm); font-size: 9px; color: var(--dim); min-width: 36px; text-align: right; }
+
+/* ══════════════════════════════════════════════════════════════
+   10. PROCESS STEPS
+══════════════════════════════════════════════════════════════ */
+.process-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; position: relative; }
+.process-grid::before { content:''; position:absolute; top:24px; left:12.5%; right:12.5%; height:1px; background:linear-gradient(90deg,var(--ind),var(--cyan),var(--pink)); z-index:0; }
+.proc-step { text-align: center; padding: 0 16px; position: relative; z-index:1; }
+.proc-num { width:48px; height:48px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; margin:0 auto 14px; font-family:var(--fm); font-size:11px; font-weight:700; }
+.pn-ind { background:rgba(99,102,241,.15); border:2px solid rgba(99,102,241,.4); color:var(--il); }
+.pn-cya { background:rgba(6,182,212,.15); border:2px solid rgba(6,182,212,.4); color:var(--cl); }
+.pn-pnk { background:rgba(236,72,153,.15); border:2px solid rgba(236,72,153,.4); color:var(--pl); }
+.pn-mix { background:rgba(99,102,241,.1); border:2px solid rgba(165,180,252,.3); color:var(--il); }
+.proc-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.proc-desc { font-size: 11px; color: var(--dim); line-height: 1.65; }
+
+/* ══════════════════════════════════════════════════════════════
+   11. MOTION
+══════════════════════════════════════════════════════════════ */
+.motion-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.motion-card { border: 1px solid var(--border); border-radius: 16px; padding: 28px; text-align: center; background: var(--glass); cursor: pointer; }
+.motion-card-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.motion-card-desc { font-family: var(--fm); font-size: 8px; color: var(--dim); letter-spacing: 1px; }
+.motion-demo { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg,var(--ind),var(--cyan)); margin: 0 auto 16px; }
+
+/* Lift demo */
+.lift-demo:hover .motion-demo { transform: translateY(-8px); transition: transform .25s ease; }
+
+/* Reveal demo */
+.reveal-demo .motion-demo { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s ease; }
+.reveal-demo:hover .motion-demo { opacity: 1; transform: translateY(0); }
+
+/* Scale demo */
+.scale-demo:hover .motion-demo { transform: scale(1.1); transition: transform .2s ease; }
+
+/* Drift demo */
+.drift-demo .motion-demo { animation: driftDemo 3s ease-in-out infinite; }
+@keyframes driftDemo { 0%,100%{transform:translate(0,0)} 50%{transform:translate(8px,5px)} }
+
+/* Fade hover */
+.fade-demo:hover .motion-demo { opacity: .6; transition: opacity .2s; }
+
+/* Glow pulse */
+.glow-demo .motion-demo { animation: glowPulse 2s ease-in-out infinite; }
+@keyframes glowPulse { 0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,.5)} 50%{box-shadow:0 0 20px 6px rgba(99,102,241,.3)} }
+
+/* ══════════════════════════════════════════════════════════════
+   12. SPACING & RADIUS
+══════════════════════════════════════════════════════════════ */
+.spacing-row { display: flex; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
+.space-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.space-block { background: linear-gradient(135deg, rgba(99,102,241,.3), rgba(6,182,212,.2)); border: 1px dashed rgba(99,102,241,.4); }
+.space-label { font-family: var(--fm); font-size: 8px; color: var(--dim); letter-spacing: 1px; }
+
+.radius-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.radius-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.radius-block { width: 60px; height: 60px; background: rgba(99,102,241,.2); border: 1px solid rgba(99,102,241,.35); }
+
+/* ══════════════════════════════════════════════════════════════
+   UTILITY
+══════════════════════════════════════════════════════════════ */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.stat-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ─── TWEAKS PANEL ──────────────────────────────────────────── */
+#tweaks-panel {
+  display: none;
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: rgba(7,0,46,.95);
+  border: 1px solid rgba(99,102,241,.3);
+  border-radius: 16px;
+  padding: 20px;
+  z-index: 1000;
+  width: 220px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+#tweaks-panel.visible { display: block; }
+.tweak-title { font-family: var(--fm); font-size: 9px; letter-spacing: 3px; color: var(--il); margin-bottom: 16px; }
+.tweak-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.tweak-label { font-size: 11px; color: var(--dim); }
+.tweak-select {
+  background: rgba(99,102,241,.12);
+  border: 1px solid rgba(99,102,241,.3);
+  color: var(--il);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-family: var(--fm);
+  font-size: 8px;
+  letter-spacing: 1px;
+  outline: none;
+  cursor: pointer;
+}
+.tweak-toggle {
+  width: 34px; height: 18px;
+  background: rgba(99,102,241,.2);
+  border: 1px solid rgba(99,102,241,.3);
+  border-radius: 30px;
+  cursor: pointer;
+  position: relative;
+  transition: background .2s;
+}
+.tweak-toggle.on { background: var(--ind); }
+.tweak-toggle::after { content:''; position:absolute; top:2px; left:2px; width:12px; height:12px; background:#fff; border-radius:50%; transition:transform .2s; }
+.tweak-toggle.on::after { transform: translateX(16px); }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<!-- AURORA ORBS -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="aside-logo">MUHTASIM AHMED</div>
+    <div class="aside-sub">DESIGN SYSTEM v1.0</div>
+
+    <div class="aside-section-label">FOUNDATIONS</div>
+    <a class="aside-link active" href="#colors">Colors</a>
+    <a class="aside-link" href="#typography">Typography</a>
+    <a class="aside-link" href="#spacing">Spacing & Radius</a>
+
+    <div class="aside-divider"></div>
+    <div class="aside-section-label">COMPONENTS</div>
+    <a class="aside-link" href="#buttons">Buttons</a>
+    <a class="aside-link" href="#chips">Chips & Badges</a>
+    <a class="aside-link" href="#cards">Cards</a>
+    <a class="aside-link" href="#nav">Navigation</a>
+    <a class="aside-link" href="#forms">Forms</a>
+    <a class="aside-link" href="#timeline">Timeline</a>
+    <a class="aside-link" href="#skills">Skill Bars</a>
+    <a class="aside-link" href="#process">Process Steps</a>
+
+    <div class="aside-divider"></div>
+    <div class="aside-section-label">PATTERNS</div>
+    <a class="aside-link" href="#motion">Motion</a>
+    <a class="aside-link" href="#cursor">Cursor</a>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- ── COLORS ─────────────────────────────────────────────── -->
+    <section class="ds-section" id="colors">
+      <div class="section-tag">01 — FOUNDATIONS</div>
+      <h1 class="section-title">Colors <span class="grad">& Tokens</span></h1>
+      <p class="section-desc">A deep-space dark palette anchored in three vivid accent hues — indigo, cyan, and pink — layered over near-black backgrounds with glass surfaces and subtle borders.</p>
+
+      <h3 style="font-size:11px;font-family:var(--fm);letter-spacing:3px;color:var(--dim);margin-bottom:16px;">ACCENT PALETTE</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#6366f1;"></div>
+          <div class="swatch-info"><div class="swatch-name">Indigo</div><div class="swatch-val">--ind · #6366f1</div></div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#a5b4fc;"></div>
+          <div class="swatch-info"><div class="swatch-name">Indigo Light</div><div class="swatch-val">--il · #a5b4fc</div></div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#06b6d4;"></div>
+          <div class="swatch-info"><div class="swatch-name">Cyan</div><div class="swatch-val">--cyan · #06b6d4</div></div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#67e8f9;"></div>
+          <div class="swatch-info"><div class="swatch-name">Cyan Light</div><div class="swatch-val">--cl · #67e8f9</div></div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#ec4899;"></div>
+          <div class="swatch-info"><div class="swatch-name">Pink</div><div class="swatch-val">--pink · #ec4899</div></div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#f0abfc;"></div>
+          <div class="swatch-info"><div class="swatch-name">Pink Light</div><div class="swatch-val">--pl · #f0abfc</div></div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#4ade80;"></div>
+          <div class="swatch-info"><div class="swatch-name">Green</div><div class="swatch-val">--green · #4ade80</div></div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#e0e7ff;"></div>
+          <div class="swatch-info"><div class="swatch-name">Text</div><div class="swatch-val">--text · #e0e7ff</div></div>
+        </div>
+      </div>
+
+      <h3 style="font-size:11px;font-family:var(--fm);letter-spacing:3px;color:var(--dim);margin-bottom:16px;">BACKGROUNDS</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#030018; border-bottom:1px solid rgba(255,255,255,.09);"></div>
+          <div class="swatch-info"><div class="swatch-name">BG Base</div><div class="swatch-val">--bg · #030018</div></div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#07002e; border-bottom:1px solid rgba(255,255,255,.09);"></div>
+          <div class="swatch-info"><div class="swatch-name">BG 2</div><div class="swatch-val">--bg2 · #07002e</div></div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#0b0040; border-bottom:1px solid rgba(255,255,255,.09);"></div>
+          <div class="swatch-info"><div class="swatch-name">BG 3</div><div class="swatch-val">--bg3 · #0b0040</div></div>
+        </div>
+      </div>
+
+      <h3 style="font-size:11px;font-family:var(--fm);letter-spacing:3px;color:var(--dim);margin-bottom:16px;margin-top:32px;">GRADIENTS</h3>
+      <div class="gradient-row">
+        <div class="grad-swatch">
+          <div class="grad-block" style="background:linear-gradient(135deg,#6366f1,#06b6d4);"></div>
+          <div class="grad-info"><div class="grad-name">Primary CTA</div><div class="grad-val">135deg · ind → cyan</div></div>
+        </div>
+        <div class="grad-swatch">
+          <div class="grad-block" style="background:linear-gradient(90deg,#a5b4fc,#67e8f9);"></div>
+          <div class="grad-info"><div class="grad-name">Text Gradient</div><div class="grad-val">90deg · il → cl</div></div>
+        </div>
+        <div class="grad-swatch">
+          <div class="grad-block" style="background:linear-gradient(135deg,#e0e7ff,#a5b4fc,#67e8f9);"></div>
+          <div class="grad-info"><div class="grad-name">Hero Name</div><div class="grad-val">135deg · text → il → cl</div></div>
+        </div>
+        <div class="grad-swatch">
+          <div class="grad-block" style="background:linear-gradient(90deg,#6366f1,#06b6d4,#ec4899);"></div>
+          <div class="grad-info"><div class="grad-name">Tri-Accent</div><div class="grad-val">90deg · ind → cyan → pink</div></div>
+        </div>
+      </div>
+
+      <h3 style="font-size:11px;font-family:var(--fm);letter-spacing:3px;color:var(--dim);margin-bottom:16px;margin-top:32px;">SURFACES & BORDERS</h3>
+      <div class="surface-row">
+        <div class="surface-swatch" style="background:rgba(255,255,255,.04);">
+          <div class="surface-name">Glass</div>
+          <div class="surface-val">--glass · rgba(255,255,255,.04)</div>
+        </div>
+        <div class="surface-swatch" style="background:rgba(255,255,255,.07);">
+          <div class="surface-name">Glass 2</div>
+          <div class="surface-val">--glass2 · rgba(255,255,255,.07)</div>
+        </div>
+        <div class="surface-swatch" style="border: 2px solid rgba(255,255,255,.09);">
+          <div class="surface-name">Border</div>
+          <div class="surface-val">--border · rgba(255,255,255,.09)</div>
+        </div>
+        <div class="surface-swatch" style="border: 2px solid rgba(99,102,241,.35);">
+          <div class="surface-name">Border Active</div>
+          <div class="surface-val">rgba(99,102,241,.35)</div>
+        </div>
+        <div class="surface-swatch" style="background:rgba(224,231,255,.38);">
+          <div class="surface-name" style="color:#030018;">Dim Text</div>
+          <div class="surface-val" style="color:rgba(3,0,24,.5);">--dim · rgba(224,231,255,.38)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TYPOGRAPHY ─────────────────────────────────────────── -->
+    <section class="ds-section" id="typography">
+      <div class="section-tag">02 — FOUNDATIONS</div>
+      <h2 class="section-title">Typog<span class="grad">raphy</span></h2>
+      <p class="section-desc">Two typefaces: <strong>Outfit</strong> for display and body (expressive weight 800 for headings), and <strong>Space Mono</strong> for labels, tags, and monospaced UI elements.</p>
+
+      <div class="type-stack">
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">HERO DISPLAY</div>
+            <div class="type-spec">Outfit 800<br>clamp(52–88px)<br>tracking −1.5px<br>line-height 1</div>
+          </div>
+          <div class="t-hero-name">Alex<br>Cipher</div>
+        </div>
+
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">SECTION TITLE</div>
+            <div class="type-spec">Outfit 800<br>clamp(30–48px)<br>line-height 1.05</div>
+          </div>
+          <div class="t-section-title">Selected <span class="grad">Work</span></div>
+        </div>
+
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">CARD TITLE</div>
+            <div class="type-spec">Outfit 700<br>18px<br>line-height 1.2</div>
+          </div>
+          <div class="t-card-title">UX Design & Prototyping</div>
+        </div>
+
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">BODY</div>
+            <div class="type-spec">Outfit 400<br>14px<br>line-height 1.85</div>
+          </div>
+          <div class="t-body" style="max-width:480px;">I design and build digital experiences that live at the intersection of craft and function. Every pixel earns its place. Every interaction tells a story.</div>
+        </div>
+
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">BODY SMALL</div>
+            <div class="type-spec">Outfit 400<br>12px<br>line-height 1.75</div>
+          </div>
+          <div class="t-small" style="max-width:420px;">Led end-to-end product design for a SaaS platform. Conducted user research, created wireframes, and delivered a full design system used by 12 engineers.</div>
+        </div>
+
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">SECTION LABEL</div>
+            <div class="type-spec">Space Mono 400<br>8–9px<br>tracking 4px</div>
+          </div>
+          <div class="t-label">03 — SELECTED WORK</div>
+        </div>
+
+        <div class="type-row">
+          <div class="type-meta">
+            <div class="type-role">MONO SMALL</div>
+            <div class="type-spec">Space Mono 400<br>8px<br>tracking 2px</div>
+          </div>
+          <div class="t-mono-sm">AVAILABLE FOR WORK · APR 2026</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SPACING ────────────────────────────────────────────── -->
+    <section class="ds-section" id="spacing">
+      <div class="section-tag">03 — FOUNDATIONS</div>
+      <h2 class="section-title">Spacing <span class="grad">& Radius</span></h2>
+      <p class="section-desc">A consistent 4px base grid with generous section padding. Border radius follows a progression from pill (nav, buttons) to rounded rectangles (cards).</p>
+
+      <h3 style="font-size:11px;font-family:var(--fm);letter-spacing:3px;color:var(--dim);margin-bottom:20px;">SPACING SCALE</h3>
+      <div class="spacing-row">
+        <div class="space-item"><div class="space-block" style="width:4px;height:4px;"></div><div class="space-label">4</div></div>
+        <div class="space-item"><div class="space-block" style="width:8px;height:8px;"></div><div class="space-label">8</div></div>
+        <div class="space-item"><div class="space-block" style="width:12px;height:12px;"></div><div class="space-label">12</div></div>
+        <div class="space-item"><div class="space-block" style="width:16px;height:16px;"></div><div class="space-label">16</div></div>
+        <div class="space-item"><div class="space-block" style="width:20px;height:20px;"></div><div class="space-label">20</div></div>
+        <div class="space-item"><div class="space-block" style="width:24px;height:24px;"></div><div class="space-label">24</div></div>
+        <div class="space-item"><div class="space-block" style="width:32px;height:32px;"></div><div class="space-label">32</div></div>
+        <div class="space-item"><div class="space-block" style="width:40px;height:40px;"></div><div class="space-label">40</div></div>
+        <div class="space-item"><div class="space-block" style="width:60px;height:60px;"></div><div class="space-label">60</div></div>
+        <div class="space-item"><div class="space-block" style="width:80px;height:80px;"></div><div class="space-label">80</div></div>
+        <div class="space-item"><div class="space-block" style="width:90px;height:90px;"></div><div class="space-label">90</div></div>
+      </div>
+
+      <h3 style="font-size:11px;font-family:var(--fm);letter-spacing:3px;color:var(--dim);margin-bottom:20px;margin-top:16px;">BORDER RADIUS</h3>
+      <div class="radius-row">
+        <div class="radius-item"><div class="radius-block" style="border-radius:4px;"></div><div class="space-label">4px — Tag</div></div>
+        <div class="radius-item"><div class="radius-block" style="border-radius:8px;"></div><div class="space-label">8px — Icon sm</div></div>
+        <div class="radius-item"><div class="radius-block" style="border-radius:10px;"></div><div class="space-label">10px — Icon</div></div>
+        <div class="radius-item"><div class="radius-block" style="border-radius:12px;"></div><div class="space-label">12px — Input</div></div>
+        <div class="radius-item"><div class="radius-block" style="border-radius:14px;"></div><div class="space-label">14px — Card sm</div></div>
+        <div class="radius-item"><div class="radius-block" style="border-radius:16px;"></div><div class="space-label">16px — Card</div></div>
+        <div class="radius-item"><div class="radius-block" style="border-radius:20px;"></div><div class="space-label">20px — Card lg</div></div>
+        <div class="radius-item"><div class="radius-block" style="border-radius:30px;"></div><div class="space-label">30px — Button</div></div>
+        <div class="radius-item"><div class="radius-block" style="border-radius:60px;"></div><div class="space-label">60px — Nav pill</div></div>
+      </div>
+    </section>
+
+    <!-- ── BUTTONS ────────────────────────────────────────────── -->
+    <section class="ds-section" id="buttons">
+      <div class="section-tag">04 — COMPONENTS</div>
+      <h2 class="section-title">But<span class="grad">tons</span></h2>
+      <p class="section-desc">Three button variants, all using Space Mono, letter-spaced, pill-shaped. Sizes: default (12px pad) and small (7px pad).</p>
+
+      <div class="btn-row">
+        <button class="btn-grad">HIRE ME ↗</button>
+        <button class="btn-glass">VIEW WORK</button>
+        <button class="btn-ghost">DOWNLOAD CV</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn-grad btn-sm">HIRE ME</button>
+        <button class="btn-glass btn-sm">VIEW WORK</button>
+        <button class="btn-ghost btn-sm">DOWNLOAD CV</button>
+      </div>
+      <div class="btn-row" style="margin-top:4px;">
+        <button class="btn-grad btn-icon btn-sm">↗</button>
+        <button class="btn-glass btn-icon btn-sm">→</button>
+        <button class="btn-ghost btn-icon btn-sm">↓</button>
+      </div>
+
+      <div style="margin-top:24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;max-width:700px;">
+        <div>
+          <div class="spec" style="margin-bottom:8px;">btn-grad</div>
+          <div class="spec">bg: linear-gradient(135deg, ind → cyan)</div>
+          <div class="spec">hover: opacity .82</div>
+          <div class="spec">radius: 30px</div>
+        </div>
+        <div>
+          <div class="spec" style="margin-bottom:8px;">btn-glass</div>
+          <div class="spec">bg: rgba(ind,.12) + blur</div>
+          <div class="spec">border: rgba(ind,.35)</div>
+          <div class="spec">hover: bg .22</div>
+        </div>
+        <div>
+          <div class="spec" style="margin-bottom:8px;">btn-ghost</div>
+          <div class="spec">bg: rgba(white,.05)</div>
+          <div class="spec">hover: border ind, color il</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CHIPS ──────────────────────────────────────────────── -->
+    <section class="ds-section" id="chips">
+      <div class="section-tag">05 — COMPONENTS</div>
+      <h2 class="section-title">Chips <span class="grad">& Badges</span></h2>
+      <p class="section-desc">Pill-shaped labels in three accent colors plus neutral glass. Used for tags, categories, status indicators, and tech stack chips.</p>
+
+      <div class="chip-row">
+        <span class="chip chip-ind">INDIGO</span>
+        <span class="chip chip-cya">CYAN</span>
+        <span class="chip chip-pnk">PINK</span>
+        <span class="chip chip-glass">NEUTRAL</span>
+        <span class="chip chip-green"><span class="avail-dot"></span>AVAILABLE</span>
+      </div>
+      <div class="chip-row">
+        <span class="chip chip-ind" style="font-size:8px;padding:3px 10px;">REACT</span>
+        <span class="chip chip-cya" style="font-size:8px;padding:3px 10px;">FIGMA</span>
+        <span class="chip chip-pnk" style="font-size:8px;padding:3px 10px;">MOTION</span>
+        <span class="chip chip-glass" style="font-size:8px;padding:3px 10px;">TYPESCRIPT</span>
+        <span class="chip chip-ind" style="font-size:8px;padding:3px 10px;">NEXT.JS</span>
+        <span class="chip chip-cya" style="font-size:8px;padding:3px 10px;">NODE</span>
+      </div>
+      <div class="chip-row" style="margin-top:8px;">
+        <span class="chip chip-ind" style="background:rgba(99,102,241,.35);border-color:rgba(165,180,252,.35);">FEATURED</span>
+        <span class="chip chip-green">
+          <span class="avail-dot"></span>OPEN TO WORK
+        </span>
+        <span class="chip chip-glass" style="background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.22);">24H REPLY</span>
+      </div>
+    </section>
+
+    <!-- ── CARDS ──────────────────────────────────────────────── -->
+    <section class="ds-section" id="cards">
+      <div class="section-tag">06 — COMPONENTS</div>
+      <h2 class="section-title">Card <span class="grad">Patterns</span></h2>
+      <p class="section-desc">Cards use a glass surface or accent-tinted background with 1px borders and lift on hover. Three color variants map to the three accent hues.</p>
+
+      <h3 style="font-size:11px;font-family:var(--fm);letter-spacing:3px;color:var(--dim);margin-bottom:16px;">SERVICE CARDS</h3>
+      <div class="cards-grid" style="margin-bottom:36px;">
+        <div class="card-ind">
+          <div class="card-num">01</div>
+          <div class="card-icon ci-ind">✦</div>
+          <div class="card-title">UX Design</div>
+          <div class="card-body">Research-driven interfaces built for clarity and conversion. From wireframes to polished hi-fi prototypes.</div>
+        </div>
+        <div class="card-cya">
+          <div class="card-num">02</div>
+          <div class="card-icon ci-cya">⚡</div>
+          <div class="card-title">Development</div>
+          <div class="card-body">Performant, accessible front-end code. React, Next.js, TypeScript — shipped with care.</div>
+        </div>
+        <div class="card-pnk">
+          <div class="card-num">03</div>
+          <div class="card-icon ci-pnk">◈</div>
+          <div class="card-title">Motion Design</div>
+          <div class="card-body">Subtle animations that breathe life into products. GSAP, Framer Motion, and CSS.</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:11px;font-family:var(--fm);letter-spacing:3px;color:var(--dim);margin-bottom:16px;">STAT PILLS</h3>
+      <div class="stat-row" style="margin-bottom:36px;">
+        <div class="stat-pill"><div class="stat-num">5+</div><div class="stat-label">YRS EXP</div></div>
+        <div class="stat-pill"><div class="stat-num">40+</div><div class="stat-label">PROJECTS</div></div>
+        <div class="stat-pill"><div class="stat-num">28</div><div class="stat-label">CLIENTS</div></div>
+        <div class="stat-pill"><div class="stat-num">100%</div><div class="stat-label">SATISFACTION</div></div>
+      </div>
+
+      <h3 style="font-size:11px;font-family:var(--fm);letter-spacing:3px;color:var(--dim);margin-bottom:16px;">FEATURED PROJECT CARD</h3>
+      <div class="featured-card">
+        <div class="feat-img-wrap">
+          <div class="feat-img-placeholder">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none"><rect x="10" y="10" width="60" height="60" rx="12" stroke="#a5b4fc" stroke-width="2"/><circle cx="40" cy="40" r="16" stroke="#67e8f9" stroke-width="2"/><line x1="40" y1="10" x2="40" y2="24" stroke="#a5b4fc" stroke-width="2"/></svg>
+          </div>
+          <div class="feat-tint"></div>
+          <div class="feat-badge">FEATURED</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-type">WEB APP · 2024</div>
+          <div class="feat-title">Quantum Dashboard</div>
+          <div class="feat-desc">A real-time analytics platform for enterprise clients. Led full UX/UI and front-end implementation.</div>
+          <div class="feat-tags">
+            <span class="feat-tag ft-ind">React</span>
+            <span class="feat-tag ft-cya">TypeScript</span>
+            <span class="feat-tag ft-pnk">Figma</span>
+          </div>
+          <div class="feat-link">VIEW CASE STUDY →</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:11px;font-family:var(--fm);letter-spacing:3px;color:var(--dim);margin-bottom:16px;margin-top:36px;">GLASS CARD (BLOG / GENERIC)</h3>
+      <div class="cards-grid">
+        <div class="card-glass">
+          <div class="card-title">Building Accessible UIs</div>
+          <div class="card-body" style="margin-top:8px;">Accessibility isn't a constraint. It's a design superpower that makes products better for everyone.</div>
+          <div class="chip-row" style="margin-top:14px;">
+            <span class="chip chip-ind" style="font-size:8px;padding:2px 8px;">DESIGN</span>
+            <span class="chip chip-glass" style="font-size:8px;padding:2px 8px;">5 MIN READ</span>
+          </div>
+        </div>
+        <div class="card-glass">
+          <div class="card-title">The Art of Micro-Interactions</div>
+          <div class="card-body" style="margin-top:8px;">Small moments of delight that transform a usable product into a memorable one.</div>
+          <div class="chip-row" style="margin-top:14px;">
+            <span class="chip chip-cya" style="font-size:8px;padding:2px 8px;">MOTION</span>
+            <span class="chip chip-glass" style="font-size:8px;padding:2px 8px;">8 MIN READ</span>
+          </div>
+        </div>
+        <div class="card-glass">
+          <div class="card-title">Design Systems at Scale</div>
+          <div class="card-body" style="margin-top:8px;">How to build component libraries that teams actually want to use. Lessons from the field.</div>
+          <div class="chip-row" style="margin-top:14px;">
+            <span class="chip chip-pnk" style="font-size:8px;padding:2px 8px;">SYSTEMS</span>
+            <span class="chip chip-glass" style="font-size:8px;padding:2px 8px;">12 MIN READ</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── NAV ────────────────────────────────────────────────── -->
+    <section class="ds-section" id="nav">
+      <div class="section-tag">07 — COMPONENTS</div>
+      <h2 class="section-title">Navi<span class="grad">gation</span></h2>
+      <p class="section-desc">A floating pill nav centered at the top of every page. Blurs on scroll and darkens its background.</p>
+
+      <div class="nav-demo-wrap">
+        <div>
+          <div class="spec" style="margin-bottom:10px;">DEFAULT STATE — bg: rgba(white,.05) + blur(16px)</div>
+          <div class="nav-pill">
+            <span class="nav-logo-d">AC</span>
+            <span class="nav-div-d"></span>
+            <div class="nav-links-d">
+              <a href="#" class="active">HOME</a>
+              <a href="#">WORK</a>
+              <a href="#">ABOUT</a>
+              <a href="#">SERVICES</a>
+              <a href="#">BLOG</a>
+            </div>
+            <button class="btn-grad btn-sm">HIRE ME</button>
+          </div>
+        </div>
+        <div>
+          <div class="spec" style="margin-bottom:10px;">SCROLLED STATE — bg: rgba(#030018,.88)</div>
+          <div class="nav-pill scrolled">
+            <span class="nav-logo-d">AC</span>
+            <span class="nav-div-d"></span>
+            <div class="nav-links-d">
+              <a href="#">HOME</a>
+              <a href="#" class="active">WORK</a>
+              <a href="#">ABOUT</a>
+              <a href="#">SERVICES</a>
+              <a href="#">BLOG</a>
+            </div>
+            <button class="btn-grad btn-sm">HIRE ME</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FORMS ──────────────────────────────────────────────── -->
+    <section class="ds-section" id="forms">
+      <div class="section-tag">08 — COMPONENTS</div>
+      <h2 class="section-title">Form <span class="grad">Elements</span></h2>
+      <p class="section-desc">Inputs use a subtle glass surface with 1px border. On focus the border shifts to indigo. Labels are Space Mono, all-caps, letter-spaced.</p>
+
+      <div class="two-col">
+        <div class="form-demo">
+          <div class="form-group">
+            <label class="form-label">YOUR NAME</label>
+            <input class="form-input" type="text" placeholder="Muhtasim Ahmed">
+          </div>
+          <div class="form-group">
+            <label class="form-label">EMAIL ADDRESS</label>
+            <input class="form-input" type="email" placeholder="hello@example.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">MESSAGE</label>
+            <textarea class="form-input form-textarea" placeholder="Tell me about your project…"></textarea>
+          </div>
+          <button class="btn-grad" style="width:100%;justify-content:center;">SEND MESSAGE →</button>
+        </div>
+
+        <div>
+          <div style="margin-bottom:24px;">
+            <div class="spec" style="margin-bottom:10px;">SEARCH INPUT</div>
+            <div class="search-input" style="max-width:360px;">
+              <span style="color:var(--dim);font-size:14px;">⌕</span>
+              <input type="text" placeholder="Search articles…">
+            </div>
+          </div>
+
+          <div class="spec" style="margin-bottom:10px;">FORM CARD CONTAINER</div>
+          <div class="form-card" style="max-width:320px;">
+            <div class="form-group">
+              <label class="form-label">QUICK CONTACT</label>
+              <input class="form-input" type="email" placeholder="your@email.com">
+            </div>
+            <button class="btn-grad btn-sm" style="width:100%;justify-content:center;padding:10px !important;">GET IN TOUCH</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TIMELINE ───────────────────────────────────────────── -->
+    <section class="ds-section" id="timeline">
+      <div class="section-tag">09 — COMPONENTS</div>
+      <h2 class="section-title">Time<span class="grad">line</span></h2>
+      <p class="section-desc">A vertical timeline with a gradient line and colored dot indicators. Used for experience and education sections.</p>
+
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot tl-ind"></div>
+          <div class="tl-date">2023 — PRESENT</div>
+          <div class="tl-role">Senior Product Designer</div>
+          <div class="tl-company">NOVA STUDIO · REMOTE</div>
+          <div class="tl-desc">Led design for a 3-person startup from 0→1. Shipped mobile app, design system, and marketing site.</div>
+          <div class="tl-tags"><span class="tl-tag">Figma</span><span class="tl-tag">React</span><span class="tl-tag">Design Systems</span></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot tl-cya"></div>
+          <div class="tl-date">2021 — 2023</div>
+          <div class="tl-role">UI/UX Designer</div>
+          <div class="tl-company">AXIOM LABS · NEW YORK</div>
+          <div class="tl-desc">Redesigned core product flows, reducing drop-off by 34%. Collaborated directly with engineering.</div>
+          <div class="tl-tags"><span class="tl-tag">UX Research</span><span class="tl-tag">Prototyping</span></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot tl-pnk"></div>
+          <div class="tl-date">2019 — 2021</div>
+          <div class="tl-role">Freelance Designer</div>
+          <div class="tl-company">SELF · WORLDWIDE</div>
+          <div class="tl-desc">Worked with 20+ clients across fintech, health, and consumer products.</div>
+          <div class="tl-tags"><span class="tl-tag">Branding</span><span class="tl-tag">Web Design</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SKILL BARS ─────────────────────────────────────────── -->
+    <section class="ds-section" id="skills">
+      <div class="section-tag">10 — COMPONENTS</div>
+      <h2 class="section-title">Skill <span class="grad">Bars</span></h2>
+      <p class="section-desc">Thin 3px progress bars with gradient fills. Categories labeled in Space Mono. Three color channels map to skill domains.</p>
+
+      <div class="two-col">
+        <div class="skill-section">
+          <div class="skill-cat-label">DESIGN</div>
+          <div class="skill-row"><span class="skill-name">Figma</span><div class="skill-track"><div class="skill-fill sf-ind" style="width:96%;"></div></div><span class="skill-pct">96%</span></div>
+          <div class="skill-row"><span class="skill-name">UI Design</span><div class="skill-track"><div class="skill-fill sf-ind" style="width:94%;"></div></div><span class="skill-pct">94%</span></div>
+          <div class="skill-row"><span class="skill-name">Motion</span><div class="skill-track"><div class="skill-fill sf-pnk" style="width:82%;"></div></div><span class="skill-pct">82%</span></div>
+          <div class="skill-row"><span class="skill-name">Branding</span><div class="skill-track"><div class="skill-fill sf-pnk" style="width:78%;"></div></div><span class="skill-pct">78%</span></div>
+        </div>
+        <div class="skill-section">
+          <div class="skill-cat-label">DEVELOPMENT</div>
+          <div class="skill-row"><span class="skill-name">React</span><div class="skill-track"><div class="skill-fill sf-cya" style="width:90%;"></div></div><span class="skill-pct">90%</span></div>
+          <div class="skill-row"><span class="skill-name">TypeScript</span><div class="skill-track"><div class="skill-fill sf-cya" style="width:85%;"></div></div><span class="skill-pct">85%</span></div>
+          <div class="skill-row"><span class="skill-name">Node.js</span><div class="skill-track"><div class="skill-fill sf-ind" style="width:74%;"></div></div><span class="skill-pct">74%</span></div>
+          <div class="skill-row"><span class="skill-name">CSS/GSAP</span><div class="skill-track"><div class="skill-fill sf-cya" style="width:92%;"></div></div><span class="skill-pct">92%</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PROCESS ────────────────────────────────────────────── -->
+    <section class="ds-section" id="process">
+      <div class="section-tag">11 — COMPONENTS</div>
+      <h2 class="section-title">Process <span class="grad">Steps</span></h2>
+      <p class="section-desc">A 4-step horizontal process with a gradient connector line and numbered circle badges.</p>
+
+      <div class="process-grid">
+        <div class="proc-step">
+          <div class="proc-num pn-ind">01</div>
+          <div class="proc-title">Discover</div>
+          <div class="proc-desc">Research, audits, and stakeholder interviews to define scope.</div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-num pn-cya">02</div>
+          <div class="proc-title">Define</div>
+          <div class="proc-desc">Synthesize findings into clear problem statements and goals.</div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-num pn-pnk">03</div>
+          <div class="proc-title">Design</div>
+          <div class="proc-desc">Wireframes, prototypes, and high-fidelity mockups in Figma.</div>
+        </div>
+        <div class="proc-step">
+          <div class="proc-num pn-mix">04</div>
+          <div class="proc-title">Deliver</div>
+          <div class="proc-desc">Handoff, QA, and launch with ongoing support.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── MOTION ─────────────────────────────────────────────── -->
+    <section class="ds-section" id="motion">
+      <div class="section-tag">12 — PATTERNS</div>
+      <h2 class="section-title">Motion <span class="grad">& Animation</span></h2>
+      <p class="section-desc">Hover over each card to preview the interaction. Motion is subtle, purposeful, and physics-inspired — never gratuitous.</p>
+
+      <div class="motion-grid">
+        <div class="motion-card lift-demo">
+          <div class="motion-demo"></div>
+          <div class="motion-card-title">Card Lift</div>
+          <div class="motion-card-desc">translateY(−4 to −6px) · .25s ease</div>
+        </div>
+        <div class="motion-card reveal-demo">
+          <div class="motion-demo"></div>
+          <div class="motion-card-title">Scroll Reveal</div>
+          <div class="motion-card-desc">opacity 0→1 + translateY(24→0) · .7s ease</div>
+        </div>
+        <div class="motion-card scale-demo">
+          <div class="motion-demo"></div>
+          <div class="motion-card-title">Image Scale</div>
+          <div class="motion-card-desc">scale(1→1.04) on card hover · .4s ease</div>
+        </div>
+        <div class="motion-card drift-demo">
+          <div class="motion-demo" style="background:radial-gradient(ellipse,rgba(99,102,241,.6) 0%,transparent 70%);border-radius:50%;width:60px;height:60px;"></div>
+          <div class="motion-card-title">Aurora Drift</div>
+          <div class="motion-card-desc">translate(60px,40px) · 20–30s ease-in-out ∞</div>
+        </div>
+        <div class="motion-card fade-demo">
+          <div class="motion-demo"></div>
+          <div class="motion-card-title">Opacity Fade</div>
+          <div class="motion-card-desc">opacity → .82 on hover · .2s ease (CTA btn)</div>
+        </div>
+        <div class="motion-card glow-demo">
+          <div class="motion-demo" style="width:20px;height:20px;border-radius:50%;"></div>
+          <div class="motion-card-title">Pulse Glow</div>
+          <div class="motion-card-desc">box-shadow grow/shrink · 2s ease-in-out ∞</div>
+        </div>
+      </div>
+
+      <div style="margin-top:32px;">
+        <h3 style="font-size:11px;font-family:var(--fm);letter-spacing:3px;color:var(--dim);margin-bottom:16px;">TIMING REFERENCE</h3>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:640px;">
+          <div style="background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--il),var(--cl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">0.1s</div>
+            <div class="spec" style="margin-top:4px;">Cursor lag</div>
+          </div>
+          <div style="background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--il),var(--cl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">0.2s</div>
+            <div class="spec" style="margin-top:4px;">Hover states</div>
+          </div>
+          <div style="background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--il),var(--cl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">0.3s</div>
+            <div class="spec" style="margin-top:4px;">Nav scroll</div>
+          </div>
+          <div style="background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--il),var(--cl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">0.7s</div>
+            <div class="spec" style="margin-top:4px;">Scroll reveal</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CURSOR ─────────────────────────────────────────────── -->
+    <section class="ds-section" id="cursor">
+      <div class="section-tag">13 — PATTERNS</div>
+      <h2 class="section-title">Cursor <span class="grad">Design</span></h2>
+      <p class="section-desc">The default browser cursor is hidden. A custom two-layer cursor provides feedback: a 10px gradient dot (snappy, <code style="font-family:var(--fm);font-size:11px;color:var(--il);">.2s</code>) and a 30px ring that trails behind (<code style="font-family:var(--fm);font-size:11px;color:var(--il);">.1s</code>).</p>
+
+      <div style="display:flex;gap:40px;align-items:center;padding:32px;background:var(--glass);border:1px solid var(--border);border-radius:16px;max-width:600px;">
+        <div style="text-align:center;">
+          <div style="width:10px;height:10px;background:linear-gradient(135deg,var(--ind),var(--cyan));border-radius:50%;margin:0 auto 10px;"></div>
+          <div class="spec">#cur · 10px dot</div>
+          <div class="spec">gradient fill</div>
+          <div class="spec">transition: .2s</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:30px;height:30px;border:1px solid rgba(99,102,241,.5);border-radius:50%;margin:0 auto 10px;"></div>
+          <div class="spec">#cur2 · 30px ring</div>
+          <div class="spec">border: ind/.5</div>
+          <div class="spec">transition: .1s</div>
+        </div>
+        <div style="flex:1;">
+          <div class="spec" style="margin-bottom:6px;">cursor: none on body</div>
+          <div class="spec" style="margin-bottom:6px;">pointer-events: none on both elements</div>
+          <div class="spec" style="margin-bottom:6px;">z-index: 9999 / 9998</div>
+          <div class="spec">transform: translate(−50%,−50%) to center on point</div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;padding:20px 24px;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.2);border-radius:12px;max-width:600px;">
+        <div class="spec" style="color:var(--il);margin-bottom:6px;">SCROLLBAR STYLE</div>
+        <div class="spec">Width: 3px · Track: --bg · Thumb: linear-gradient(180deg, ind → cyan)</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- TWEAKS PANEL -->
+<div id="tweaks-panel">
+  <div class="tweak-title">TWEAKS</div>
+  <div class="tweak-row">
+    <span class="tweak-label">Aurora orbs</span>
+    <div class="tweak-toggle on" id="t-orbs" onclick="toggleOrbs(this)"></div>
+  </div>
+  <div class="tweak-row">
+    <span class="tweak-label">Accent color</span>
+    <select class="tweak-select" id="t-accent" onchange="changeAccent(this.value)">
+      <option value="ind">Indigo</option>
+      <option value="cyan">Cyan</option>
+      <option value="pink">Pink</option>
+    </select>
+  </div>
+  <div class="tweak-row">
+    <span class="tweak-label">Sidebar</span>
+    <div class="tweak-toggle on" id="t-sidebar" onclick="toggleSidebar(this)"></div>
+  </div>
+</div>
+
+<script>
+/* CURSOR */
+const cur = document.getElementById('cur'), cur2 = document.getElementById('cur2');
+let mx = 0, my = 0, cx2 = 0, cy2 = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx+'px'; cur.style.top = my+'px'; });
+function animateCur2() { cx2 += (mx-cx2)*.12; cy2 += (my-cy2)*.12; cur2.style.left = cx2+'px'; cur2.style.top = cy2+'px'; requestAnimationFrame(animateCur2); }
+animateCur2();
+
+/* SIDEBAR SCROLL HIGHLIGHT */
+const links = document.querySelectorAll('.aside-link');
+const sections = document.querySelectorAll('.ds-section');
+function onScroll() {
+  let cur_s = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur_s = '#'+s.id; });
+  links.forEach(l => { l.classList.toggle('active', l.getAttribute('href') === cur_s); });
+}
+window.addEventListener('scroll', onScroll);
+onScroll();
+
+/* TWEAKS */
+window.addEventListener('message', e => {
+  if (e.data?.type === '__activate_edit_mode') document.getElementById('tweaks-panel').classList.add('visible');
+  if (e.data?.type === '__deactivate_edit_mode') document.getElementById('tweaks-panel').classList.remove('visible');
+});
+window.parent.postMessage({type:'__edit_mode_available'},'*');
+
+function toggleOrbs(el) {
+  el.classList.toggle('on');
+  const orbs = document.querySelectorAll('.orb');
+  orbs.forEach(o => o.style.display = el.classList.contains('on') ? '' : 'none');
+}
+function changeAccent(v) {
+  const map = {ind:'#6366f1',cyan:'#06b6d4',pink:'#ec4899'};
+  document.documentElement.style.setProperty('--ind', map[v]);
+}
+function toggleSidebar(el) {
+  el.classList.toggle('on');
+  const aside = document.querySelector('aside');
+  const main = document.querySelector('main');
+  if (!el.classList.contains('on')) {
+    aside.style.display = 'none';
+    main.style.marginLeft = '0';
+  } else {
+    aside.style.display = '';
+    main.style.marginLeft = '220px';
+  }
+}
+</script>
+</body>
+</html>

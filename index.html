@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muhtasim Ahmed — Portfolio</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/outfit@5/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/outfit@5/800.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/space-mono@5/400.css">
+<style>
+:root{
+  --bg:#030018;--ind:#6366f1;--cyan:#06b6d4;--pink:#ec4899;
+  --il:#a5b4fc;--cl:#67e8f9;--pl:#f0abfc;
+  --text:#e0e7ff;--dim:rgba(224,231,255,.35);
+  --border:rgba(255,255,255,.08);--glass:rgba(255,255,255,.04);
+  --fd:'Outfit',sans-serif;--fm:'Space Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--fd);cursor:none}
+::-webkit-scrollbar{width:3px}
+
+/* CURSOR */
+#cur{position:fixed;width:10px;height:10px;background:linear-gradient(135deg,var(--ind),var(--cyan));border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s}
+#cur2{position:fixed;width:28px;height:28px;border:1px solid rgba(99,102,241,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .12s}
+
+/* ORBS */
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
+.o1{width:700px;height:700px;background:radial-gradient(ellipse,rgba(99,102,241,.14) 0%,transparent 60%);top:-250px;left:-200px;animation:d1 22s ease-in-out infinite}
+.o2{width:600px;height:600px;background:radial-gradient(ellipse,rgba(6,182,212,.1) 0%,transparent 60%);top:-150px;right:-150px;animation:d2 28s ease-in-out infinite}
+.o3{width:500px;height:500px;background:radial-gradient(ellipse,rgba(236,72,153,.08) 0%,transparent 60%);bottom:-100px;left:35%;animation:d3 32s ease-in-out infinite}
+@keyframes d1{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,50px)}}
+@keyframes d2{0%,100%{transform:translate(0,0)}50%{transform:translate(-60px,70px)}}
+@keyframes d3{0%,100%{transform:translate(0,0)}50%{transform:translate(50px,-60px)}}
+
+/* LAYOUT */
+.page{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;padding:40px 24px;gap:0}
+
+/* HEADER */
+.top-bar{position:fixed;top:0;left:0;right:0;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;z-index:10}
+.logo{font-weight:800;font-size:13px;letter-spacing:2px;background:linear-gradient(90deg,var(--il),var(--cl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.avail{display:flex;align-items:center;gap:6px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);border-radius:20px;padding:6px 14px}
+.avail-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,.5)}70%{opacity:.8;box-shadow:0 0 0 5px transparent}}
+.avail span{font-family:var(--fm);font-size:8px;color:#4ade80;letter-spacing:2px}
+
+/* HERO TEXT */
+.hero-eyebrow{font-family:var(--fm);font-size:9px;letter-spacing:4px;color:rgba(165,180,252,.5);margin-bottom:16px;text-align:center}
+.hero-name{font-size:clamp(48px,9vw,96px);font-weight:800;line-height:.95;text-align:center;margin-bottom:12px;letter-spacing:-2px}
+.name-l1{display:block;background:linear-gradient(135deg,#e0e7ff,var(--il),var(--cl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.name-l2{display:block;color:transparent;-webkit-text-stroke:1.5px rgba(165,180,252,.3)}
+.hero-sub{font-size:14px;color:var(--dim);line-height:1.7;text-align:center;max-width:480px;margin:0 auto 48px}
+
+/* CARDS */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:820px;margin:0 auto}
+.entry-card{
+  border-radius:20px;padding:32px;cursor:pointer;
+  transition:transform .3s,box-shadow .3s,border-color .3s;
+  text-decoration:none;color:inherit;display:block;
+  position:relative;overflow:hidden;
+}
+.entry-card:hover{transform:translateY(-6px)}
+.entry-card .card-glow{
+  position:absolute;width:300px;height:300px;border-radius:50%;
+  top:-100px;right:-80px;pointer-events:none;transition:opacity .3s;
+}
+.card-site{
+  background:rgba(99,102,241,.08);
+  border:1px solid rgba(99,102,241,.25);
+}
+.card-site:hover{border-color:rgba(99,102,241,.5);box-shadow:0 20px 60px rgba(99,102,241,.15)}
+.card-site .card-glow{background:radial-gradient(ellipse,rgba(99,102,241,.25) 0%,transparent 70%)}
+.card-dash{
+  background:rgba(6,182,212,.06);
+  border:1px solid rgba(6,182,212,.2);
+}
+.card-dash:hover{border-color:rgba(6,182,212,.45);box-shadow:0 20px 60px rgba(6,182,212,.12)}
+.card-dash .card-glow{background:radial-gradient(ellipse,rgba(6,182,212,.2) 0%,transparent 70%)}
+
+.card-icon-wrap{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:22px;position:relative}
+.card-site .card-icon-wrap{background:rgba(99,102,241,.2)}
+.card-dash .card-icon-wrap{background:rgba(6,182,212,.2)}
+.card-label{font-family:var(--fm);font-size:8px;letter-spacing:3px;color:var(--dim);margin-bottom:8px}
+.card-title{font-size:22px;font-weight:800;margin-bottom:10px;line-height:1.15}
+.card-site .card-title{background:linear-gradient(90deg,var(--il),var(--cl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.card-dash .card-title{background:linear-gradient(90deg,var(--cl),var(--pl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.card-desc{font-size:12px;color:var(--dim);line-height:1.75;margin-bottom:20px}
+.card-features{display:flex;flex-direction:column;gap:6px;margin-bottom:20px}
+.card-feat{font-family:var(--fm);font-size:9px;color:var(--dim);display:flex;align-items:center;gap:8px;letter-spacing:.5px}
+.card-feat-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.card-site .card-feat-dot{background:var(--ind)}
+.card-dash .card-feat-dot{background:var(--cyan)}
+.card-action{font-family:var(--fm);font-size:9px;letter-spacing:2px;display:inline-flex;align-items:center;gap:6px;transition:gap .2s}
+.card-site .card-action{color:var(--il)}
+.card-dash .card-action{color:var(--cl)}
+.entry-card:hover .card-action{gap:10px}
+
+/* FOOTER */
+.page-footer{position:fixed;bottom:0;left:0;right:0;padding:18px 40px;display:flex;align-items:center;justify-content:center;gap:32px;border-top:1px solid var(--border);background:rgba(3,0,24,.6);backdrop-filter:blur(10px);z-index:10}
+.footer-stat{text-align:center}
+.footer-stat-num{font-size:16px;font-weight:800;background:linear-gradient(135deg,var(--il),var(--cl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.footer-stat-label{font-family:var(--fm);font-size:7px;color:rgba(255,255,255,.2);letter-spacing:2px;margin-top:1px}
+.footer-div{width:1px;height:28px;background:var(--border)}
+
+@media(max-width:700px){
+  .cards{grid-template-columns:1fr}
+  body{overflow-y:auto}
+  html,body{height:auto}
+  .page{height:auto;padding:100px 20px 100px}
+}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<div id="cur"></div><div id="cur2"></div>
+
+<div class="top-bar">
+  <div class="logo">MUHTASIM AHMED</div>
+  <div class="avail"><div class="avail-dot"></div><span>AVAILABLE FOR WORK</span></div>
+</div>
+
+<div class="page">
+  <div class="hero-eyebrow">// WELCOME TO MY CORNER OF THE INTERNET</div>
+  <h1 class="hero-name">
+    <span class="name-l1">Portfolio</span>
+    <span class="name-l2">Studio</span>
+  </h1>
+  <p class="hero-sub">UI/UX designer & frontend developer based in Dhaka. Building digital products that live at the intersection of craft and code.</p>
+
+  <div class="cards">
+    <!-- Portfolio Site -->
+    <a class="entry-card card-site" href="site/index.html">
+      <div class="card-glow"></div>
+      <div class="card-icon-wrap">🌐</div>
+      <div class="card-label">PUBLIC SITE</div>
+      <div class="card-title">View Portfolio</div>
+      <div class="card-desc">The full live portfolio — home, work, services, blog, and contact pages.</div>
+      <div class="card-features">
+        <div class="card-feat"><div class="card-feat-dot"></div>7 fully-designed pages</div>
+        <div class="card-feat"><div class="card-feat-dot"></div>Aurora depth visual style</div>
+        <div class="card-feat"><div class="card-feat-dot"></div>Animated interactions</div>
+        <div class="card-feat"><div class="card-feat-dot"></div>Project showcase & blog</div>
+      </div>
+      <div class="card-action">OPEN PORTFOLIO →</div>
+    </a>
+
+    <!-- Dashboard -->
+    <a class="entry-card card-dash" href="site/dashboard.html">
+      <div class="card-glow"></div>
+      <div class="card-icon-wrap">⚙️</div>
+      <div class="card-label">CONTENT EDITOR</div>
+      <div class="card-title">Dashboard</div>
+      <div class="card-desc">Edit every word, image, and section of the portfolio — like Elementor, without leaving the browser.</div>
+      <div class="card-features">
+        <div class="card-feat"><div class="card-feat-dot"></div>Edit all text & content</div>
+        <div class="card-feat"><div class="card-feat-dot"></div>Add/remove projects & posts</div>
+        <div class="card-feat"><div class="card-feat-dot"></div>Live iframe preview</div>
+        <div class="card-feat"><div class="card-feat-dot"></div>Auto-saves to browser</div>
+      </div>
+      <div class="card-action">OPEN DASHBOARD →</div>
+    </a>
+  </div>
+</div>
+
+<div class="page-footer">
+  <div class="footer-stat"><div class="footer-stat-num">7</div><div class="footer-stat-label">PAGES</div></div>
+  <div class="footer-div"></div>
+  <div class="footer-stat"><div class="footer-stat-num">8</div><div class="footer-stat-label">SECTIONS</div></div>
+  <div class="footer-div"></div>
+  <div class="footer-stat"><div class="footer-stat-num">60+</div><div class="footer-stat-label">EDITABLE FIELDS</div></div>
+  <div class="footer-div"></div>
+  <div class="footer-stat"><div class="footer-stat-num">∞</div><div class="footer-stat-label">CUSTOMIZABLE</div></div>
+</div>
+
+<script>
+const cur = document.getElementById('cur'), cur2 = document.getElementById('cur2');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+});
+(function anim(){cx+=(mx-cx)*.12;cy+=(my-cy)*.12;cur2.style.left=cx+'px';cur2.style.top=cy+'px';requestAnimationFrame(anim);})();
+document.addEventListener('mousedown',()=>{cur.style.width='16px';cur.style.height='16px'});
+document.addEventListener('mouseup',()=>{cur.style.width='10px';cur.style.height='10px'});
+</script>
+</body>
+</html>
